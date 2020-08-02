@@ -94,7 +94,6 @@ const IssueModal = ({ showModal, setShowModal, selectedIssue }) => {
                   <Button
                     type="button"
                     variant="success"
-                    className = "style-btn-showMore"
                     onClick={() => showMore()}
                   >
                     Show more
