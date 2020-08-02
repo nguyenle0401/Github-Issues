@@ -101,7 +101,10 @@ function App() {
          < IssueModal
          selectedIssue = {selectedIssue}
          showModal = {showModal} 
-         setShowModal = {setShowModal}/>
+         setShowModal = {setShowModal}
+         owner = {owner}
+         repo = {repo}
+         />
       </Container>
     </div>
   );

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ReactMarkdown from "react-markdown";
 import Moment from 'react-moment';
 
 
-const IssueModal = ({ showModal, setShowModal, selectedIssue }) => {
+const IssueModal = ({ showModal, setShowModal, selectedIssue, owner, repo }) => {
   const [comments, setComments] = useState([]);
   const [curComments, setCurComments] = useState([]);
 
@@ -22,7 +23,8 @@ const IssueModal = ({ showModal, setShowModal, selectedIssue }) => {
   useEffect(() => {
     const fetchComment = async () => {
       if (!selectedIssue) return;
-      const url = selectedIssue.comments_url;
+      // const url = selectedIssue.comments_url;
+      const url = `https://api.github.com/repos/${owner}/${repo}/issues/${selectedIssue.number}/comments?page=1&per_page=5`;
       // console.log(url)
       const response = await fetch(url);
       const data = await response.json();
@@ -45,11 +47,17 @@ const IssueModal = ({ showModal, setShowModal, selectedIssue }) => {
         >
           <Modal.Header closeButton>
             <Modal.Title id="example-modal-sizes-title-lg">
-              <h3>{selectedIssue.title}</h3>
+            
+              <h4><span className="mr-2">#{selectedIssue.number}</span>{selectedIssue.title}</h4>
+              <h6><ReactMarkdown source={selectedIssue.body} /></h6>
+              
               {
-                <ul className="list-group mb-4">
+                
+                comments.length > 0?<ul className="list-group mb-4">
+                  <h3>Comments:</h3>
                   {curComments.map((comment) => {
                     return (
+    
                       <li className="list-group-item" key={comment.body}>
                         <div className="media" key={comment.body}>
                           <img
@@ -63,19 +71,15 @@ const IssueModal = ({ showModal, setShowModal, selectedIssue }) => {
                           <h6 className = "style-login">
                                 {comment.user.login}
                           </h6>
-                        
                           {/* <a href={comment.user.followers_url} target="hihi" >{comment.user.followers_url}</a> */}
-                        
-                                
-                                  
-                          
                             <h6 className="mt-0 style-login">
                             <i><Moment fromNow>{comment.created_at}</Moment></i>
                               
                             </h6>
-                              <h6>
-                            <div>
-                                {comment.body.split(/(\[.*\]\(.*\))/).map((part,index)=>{
+                              <h6><ReactMarkdown source={comment.body} /></h6>
+                              
+                            {/* <div>
+                                 {comment.body.split(/(\[.*\]\(.*\))/).map((part,index)=>{
                                   if(index%2===0){
                                     return part;
                                   }
@@ -83,9 +87,10 @@ const IssueModal = ({ showModal, setShowModal, selectedIssue }) => {
                                     let arr = part.match(/\[(.*)\]\((.*)\)/);
                                     console.log(arr)
                                     return <a href={arr[2]}>{arr[1]}</a>
-                                  }})}
-                              </div>
-                              </h6>
+                                  }})} 
+                                  comment.body
+                              </div> */}
+                              
                           </div>
                         </div>
                       </li>
@@ -98,7 +103,8 @@ const IssueModal = ({ showModal, setShowModal, selectedIssue }) => {
                   >
                     Show more
                   </Button>
-                </ul>
+                </ul>:
+                <h6>No comments</h6>
               }
             </Modal.Title>
           </Modal.Header>

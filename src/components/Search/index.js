@@ -16,7 +16,7 @@ const Search = ({ searchTerm, handleSubmit, handleChange }) => {
               onChange={handleChange}
             ></Form.Control>
           </Col>
-          <Button variant = "danger" type="submit">Search</Button>
+          <Button variant = "success" type="submit">Search</Button>
         </Form.Group>
       </Form>
     </div>
