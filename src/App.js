@@ -11,14 +11,16 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 function App() {
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [owner, setOwner] = useState("");
-  const [repo, setRepo] = useState("");
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [owner, setOwner] = useState("facebook");
+  const [repo, setRepo] = useState("react");
   const [pageNum, setPageNum] = useState(1);
   const [totalPageNum,setTotalPageNum] = useState(1)
   const [issues, setIssues] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [curComments, setCurComments] = useState([]);
   
 
 
@@ -33,6 +35,7 @@ function App() {
     if (!repo || !owner) {
       setErrorMsg("Wrong Input");
     } else {
+      setErrorMsg(null)
       setRepo(repo);
       setOwner(owner);
     }
@@ -47,6 +50,7 @@ function App() {
         const response = await fetch(url);
         const data = await response.json();
         console.log("ahihi",data)
+        setErrorMsg(null);
         if (response.status === 200) {
           const link = response.headers.get("link")
           if (link){
@@ -58,15 +62,31 @@ function App() {
           }
           setIssues(data);
         } else {
+          console.log("Not 200", data.message)
           setErrorMsg(data.message);
         }
       } catch (error) {
+        console.log("Error", error.message)
         setErrorMsg(error.message);
       }
       setLoading(false);
+      // setErrorMsg(null)
     };
     fetchIssue();
-  }, [owner, repo, pageNum]);
+
+    const fetchComment = async () => {
+      if (!selectedIssue) return;
+      const url = `https://api.github.com/repos/${owner}/${repo}/issues/${selectedIssue.number}/comments?page=1&per_page=5`;
+      const response = await fetch(url);
+      const data = await response.json();
+      if (response.status === 200) {
+        console.log(data);
+        setComments(data);
+        setCurComments(data.slice([0], [5]));
+      }
+    };
+    fetchComment();
+  }, [owner, repo, pageNum,selectedIssue]);
 
   const handleSearchInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -104,6 +124,10 @@ function App() {
          setShowModal = {setShowModal}
          owner = {owner}
          repo = {repo}
+         //comments, curComments,setCurComments 
+         comments = {comments}
+         curComments = {curComments}
+         setCurComments = {setCurComments}
          />
       </Container>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Modal } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,9 +6,8 @@ import ReactMarkdown from "react-markdown";
 import Moment from 'react-moment';
 
 
-const IssueModal = ({ showModal, setShowModal, selectedIssue, owner, repo }) => {
-  const [comments, setComments] = useState([]);
-  const [curComments, setCurComments] = useState([]);
+const IssueModal = ({ showModal, setShowModal, selectedIssue, comments, curComments,setCurComments }) => {
+
 
   const showMore = () => {
     if (comments.length <= 5) {
@@ -20,22 +19,20 @@ const IssueModal = ({ showModal, setShowModal, selectedIssue, owner, repo }) => 
     }
   };
 
-  useEffect(() => {
-    const fetchComment = async () => {
-      if (!selectedIssue) return;
-      // const url = selectedIssue.comments_url;
-      const url = `https://api.github.com/repos/${owner}/${repo}/issues/${selectedIssue.number}/comments?page=1&per_page=5`;
-      // console.log(url)
-      const response = await fetch(url);
-      const data = await response.json();
-      if (response.status === 200) {
-        console.log(data);
-        setComments(data);
-        setCurComments(data.slice([0], [5]));
-      }
-    };
-    fetchComment();
-  }, [selectedIssue]);
+  // useEffect(() => {
+  //   const fetchComment = async () => {
+  //     if (!selectedIssue) return;
+  //     const url = `https://api.github.com/repos/${owner}/${repo}/issues/${selectedIssue.number}/comments?page=1&per_page=5`;
+  //     const response = await fetch(url);
+  //     const data = await response.json();
+  //     if (response.status === 200) {
+  //       console.log(data);
+  //       setComments(data);
+  //       setCurComments(data.slice([0], [5]));
+  //     }
+  //   };
+  //   fetchComment();
+  // }, [selectedIssue]);
   return (
     <div>
       {selectedIssue && (
@@ -57,8 +54,7 @@ const IssueModal = ({ showModal, setShowModal, selectedIssue, owner, repo }) => 
                   <h3>Comments:</h3>
                   {curComments.map((comment) => {
                     return (
-    
-                      <li className="list-group-item" key={comment.body}>
+                      <li className="list-group-item overflow-x-auto" key={comment.body}>
                         <div className="media" key={comment.body}>
                           <img
                             src={comment.user.avatar_url}

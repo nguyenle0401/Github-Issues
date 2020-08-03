@@ -23,15 +23,32 @@ const PaginationIssue = ({pageNum, totalPageNum, setPageNum}) => {
   }
 
   return (
+    // {pageNum-1 > 1 && pageNum-1 < totalPageNum && (
+        
+    //   <Pagination.Item onClick={handleClickOnPrev} >{pageNum-1} </Pagination.Item>
+     
+    // )}
+    // {pageNum > 1 && pageNum < totalPageNum && (
+      
+    //   <Pagination.Item active>{pageNum}</Pagination.Item>
+     
+    // )}
+    // {pageNum+1 > 1 && pageNum+1 < totalPageNum && (
+      
+    //   <Pagination.Item onClick={handleClickOnNext} >{pageNum+1} </Pagination.Item>
+     
+    // )}
     <Pagination size="lg" className="justify-content-center">
       <Pagination.First disabled = {pageNum === 1} onClick = {handelClickOnFirst} />
       <Pagination.Prev disabled = {pageNum === 1} onClick = {handelClickOnPrev}/>
       <Pagination.Item active = {pageNum === 1} onClick = {handeClickOnPage}>{1}</Pagination.Item>
       { pageNum > 2 && <Pagination.Ellipsis/>}
       
+      { pageNum -1 > 1 && pageNum -1 < totalPageNum && (<Pagination.Item onClick = {handelClickOnPrev} >{pageNum-1}</Pagination.Item>)}
 
       { pageNum > 1 && pageNum < totalPageNum && (<Pagination.Item active>{pageNum}</Pagination.Item>)}
-     
+
+      { pageNum +1 > 1 && pageNum + 1 < totalPageNum && (<Pagination.Item onClick = {handelClickOnNext} >{pageNum+1}</Pagination.Item>)}
 
       {totalPageNum > pageNum +1 && <Pagination.Ellipsis/>}
       {totalPageNum > 1 &&
